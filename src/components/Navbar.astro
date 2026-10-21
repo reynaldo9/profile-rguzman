@@ -1,0 +1,97 @@
+---
+/**
+ * Componente: Navbar.astro
+ */
+import LanguageToggle from './LanguageToggle.astro';
+import { ui } from '../i18n/ui';
+
+interface Props {
+  lang: 'es' | 'en';
+}
+
+const { lang } = Astro.props;
+const t = ui[lang];
+---
+
+<header class="sticky top-4 z-50 backdrop-blur-md bg-white/80 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-2xl px-4 py-3 shadow-sm transition-all duration-300">
+  <div class="flex items-center justify-between gap-4">
+    
+    <a href={lang === 'es' ? "#perfil" : "#perfil-en"} class="font-bold text-sm tracking-tight text-slate-900 dark:text-white hover:text-blue-500 transition-colors">
+      <span class="text-blue-500">&lt;</span>CV<span class="text-blue-500">/&gt;</span>
+    </a>
+
+    <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-600 dark:text-slate-300">
+      <a href={lang === 'es' ? "#experiencia" : "#experiencia-en"} class="hover:text-blue-500 dark:hover:text-blue-400 transition-colors">
+        {t['nav.experience']}
+      </a>
+      <a href={lang === 'es' ? "#habilidades" : "#habilidades-en"} class="hover:text-blue-500 dark:hover:text-blue-400 transition-colors">
+        {t['nav.skills']}
+      </a>
+    </nav>
+
+    <!-- AQUÍ SE SUSTITUYE EL <button> DUPLICADO POR EL COMPONENTE -->
+    <div class="flex items-center gap-2">
+      <LanguageToggle />
+
+      <button
+        type="button"
+        class="btn-theme-toggle p-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-xs cursor-pointer"
+        aria-label="Toggle Theme"
+      >
+        <span class="dark-label dark:hidden">🌙 Dark</span>
+        <span class="light-label hidden dark:inline">☀️ Light</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<script>
+  function setupNavbarInteractions() {
+    const langButtons = document.querySelectorAll('.btn-lang-toggle');
+
+    function updateLanguageUI(activeLang: string) {
+      document.querySelectorAll('.lang-es').forEach((esEl) => {
+        if (activeLang === 'es') {
+          esEl.className = 'lang-es px-2 py-1 rounded-md transition-all duration-200 bg-blue-600 text-white font-bold shadow-xs';
+        } else {
+          esEl.className = 'lang-es px-2 py-1 rounded-md transition-all duration-200 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white';
+        }
+      });
+
+      document.querySelectorAll('.lang-en').forEach((enEl) => {
+        if (activeLang === 'en') {
+          enEl.className = 'lang-en px-2 py-1 rounded-md transition-all duration-200 bg-blue-600 text-white font-bold shadow-xs';
+        } else {
+          enEl.className = 'lang-en px-2 py-1 rounded-md transition-all duration-200 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white';
+        }
+      });
+    }
+
+    const currentLang = localStorage.getItem('preferred_lang') || 'es';
+    updateLanguageUI(currentLang);
+
+    langButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const stored = localStorage.getItem('preferred_lang') || 'es';
+        const nextLang = stored === 'es' ? 'en' : 'es';
+
+        localStorage.setItem('preferred_lang', nextLang);
+        updateLanguageUI(nextLang);
+
+        window.dispatchEvent(new CustomEvent('lang-change', { detail: nextLang }));
+      });
+    });
+
+    // Control de tema (Dark / Light)
+    const themeButtons = document.querySelectorAll('.btn-theme-toggle');
+    themeButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const isDark = document.documentElement.classList.toggle('dark');
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      });
+    });
+  }
+
+  setupNavbarInteractions();
+  document.addEventListener('astro:page-load', setupNavbarInteractions);
+</script>

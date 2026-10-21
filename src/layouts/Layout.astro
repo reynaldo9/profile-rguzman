@@ -1,0 +1,63 @@
+---
+/**
+ * Componente: Layout.astro
+ * Descripción: Estructura HTML principal que envuelve todas las páginas del sitio.
+ * Configura las fuentes, el viewport, la clase 'scroll-smooth' para navegación fluida y la inicialización del tema.
+ */
+
+ // Importa los estilos globales para que Tailwind se procese en todas las páginas
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<!-- 'scroll-smooth' activa el movimiento suave de pantalla al presionar los enlaces del menú -->
+<html lang="es" class="dark scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <!-- Fuentes Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  </head>
+  <body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 font-['Inter',sans-serif] transition-colors duration-300 min-h-screen">
+    
+    <!-- Contenedor con ancho máximo centrado para Desktop y Mobile -->
+    <div class="max-w-4xl mx-auto px-4 py-6 md:py-10">
+      <slot />
+    </div>
+
+    <!-- 
+      SCRIPT INLINE:
+      Se ejecuta antes del renderizado para evitar destellos (FOUC) al leer el tema desde localStorage.
+    -->
+    <script is:inline>
+		// Inicialización del tema en el cliente (Dark mode por defecto)
+		const theme = (() => {
+			if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+			return localStorage.getItem('theme');
+			}
+			// Si no hay preferencia guardada, forzar 'dark' por defecto
+			return 'dark';
+		})();
+
+		if (theme === 'dark') {
+			document.documentElement.classList.add('dark');
+		} else {
+			document.documentElement.classList.remove('dark');
+		}
+
+		// Guardar 'dark' si no existía ninguna preferencia previa
+		if (typeof localStorage !== 'undefined' && !localStorage.getItem('theme')) {
+			localStorage.setItem('theme', 'dark');
+		}
+	</script>
+  </body>
+</html>

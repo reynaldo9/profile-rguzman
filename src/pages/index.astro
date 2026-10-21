@@ -1,0 +1,104 @@
+---
+/**
+ * Página: index.astro
+ * Descripción: Punto de entrada principal con renderizado condicional multilenguaje (ES / EN).
+ * Incluye Navbar, Header, ExperienceTimeline, Skills, AiPhilosophy y Footer.
+ */
+
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Header from '../components/Header.astro';
+import ExperienceTimeline from '../components/ExperienceTimeline.astro';
+import Skills from '../components/Skills.astro';
+import AiPhilosophy from '../components/AiPhilosophy.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout title="CV | Software Engineer & AI Specialist">
+  <div class="space-y-10">
+    
+    <!-- ========================================== -->
+    <!-- VISTA EN ESPAÑOL                           -->
+    <!-- ========================================== -->
+    <div id="content-es" class="space-y-10">
+      <Navbar lang="es" />
+      
+      <div id="perfil" class="scroll-mt-24">
+        <Header lang="es" />
+      </div>
+
+      <ExperienceTimeline lang="es" />
+
+      <div id="habilidades" class="scroll-mt-24">
+        <Skills lang="es" />
+      </div>
+
+      <!-- Sección de postura sobre la IA (antes del footer) -->
+      <AiPhilosophy lang="es" />
+
+      <!-- Pie de página con copyright y año actual -->
+      <Footer lang="es" />
+    </div>
+
+    <!-- ========================================== -->
+    <!-- VISTA EN INGLÉS                            -->
+    <!-- ========================================== -->
+    <div id="content-en" class="space-y-10 hidden">
+      <Navbar lang="en" />
+
+      <div id="perfil-en" class="scroll-mt-24">
+        <Header lang="en" />
+      </div>
+
+      <div id="experiencia-en" class="scroll-mt-24">
+        <ExperienceTimeline lang="en" />
+      </div>
+
+      <div id="habilidades-en" class="scroll-mt-24">
+        <Skills lang="en" />
+      </div>
+
+      <!-- Section on AI technical philosophy (before footer) -->
+      <AiPhilosophy lang="en" />
+
+      <!-- Footer with copyright and current year -->
+      <Footer lang="en" />
+    </div>
+
+  </div>
+</Layout>
+
+<!-- 
+  SCRIPT DE CONTROLADOR DE CLIENTE:
+  Escucha los eventos emitidos por LanguageToggle para alternar visibilidad entre bloques de idioma.
+-->
+<script>
+  function initLanguageController() {
+    const esBlock = document.getElementById('content-es');
+    const enBlock = document.getElementById('content-en');
+
+    // Función para alternar la visibilidad de los bloques según el idioma
+    function updateLanguage(lang: string) {
+      if (lang === 'en') {
+        esBlock?.classList.add('hidden');
+        enBlock?.classList.remove('hidden');
+      } else {
+        enBlock?.classList.add('hidden');
+        esBlock?.classList.remove('hidden');
+      }
+    }
+
+    // Leer preferencia guardada al iniciar la vista
+    const savedLang = localStorage.getItem('preferred_lang') || 'es';
+    updateLanguage(savedLang);
+
+    // Reaccionar al evento personalizado disparado por el botón de idioma
+    window.addEventListener('lang-change', (e: any) => {
+      updateLanguage(e.detail);
+    });
+  }
+
+  // Inicialización inmediata y compatible con View Transitions de Astro
+  initLanguageController();
+  document.addEventListener('astro:page-load', initLanguageController);
+</script>

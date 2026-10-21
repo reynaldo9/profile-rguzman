@@ -1,0 +1,96 @@
+---
+/**
+ * Componente: Header.astro
+ * Hero informal con imagen de perfil en lugar de SVG, manteniendo bordes redondeados y efecto glow.
+ */
+
+import { ui } from '../i18n/ui';
+
+interface Props {
+  lang: 'es' | 'en';
+  avatarUrl?: string; // Opcional: permite pasar la URL por props o usar la predeterminada
+}
+
+const { lang, avatarUrl = "https://lh3.googleusercontent.com/d/1DB77J1lD2s2FGGCDgKUnpv8fZKttzQvb" } = Astro.props;
+const t = ui[lang];
+---
+
+<header class="py-8 space-y-6">
+  <!-- Fila Superior: Imagen con Glow + Badge de Estado + Ubicación -->
+  <div class="flex flex-wrap items-center gap-3 md:gap-4">
+    
+    <!-- Imagen de Perfil con efecto Glow y bordes redondeados -->
+    <div class="relative group">
+      <!-- Glow resplandeciente al pasar el cursor -->
+      <div class="absolute -inset-0.5 bg-gradient-to-r from-blue-600 to-cyan-500 rounded-full blur opacity-50 group-hover:opacity-100 transition duration-300"></div>
+      
+      <!-- Contenedor circular e imagen -->
+      <div class="relative w-20 h-20 rounded-full bg-slate-800 border-2 border-blue-500 overflow-hidden shrink-0">
+        <img 
+          src={avatarUrl} 
+          alt="Reynaldo" 
+          class="w-full h-full object-cover rounded-full"
+          loading="eager"
+          referrerpolicy="no-referrer"
+        />
+      </div>
+    </div>
+
+    <div class="flex flex-col gap-1.5">
+      <!-- Badge: Disponible para trabajar -->
+      <a 
+        href="https://linkedin.com/in/reynaldo-guzmán" 
+        target="_blank" 
+        rel="noopener noreferrer"
+        class="inline-flex items-center gap-2 px-3 py-1 text-xs font-semibold rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 hover:scale-105 transition-transform w-fit"
+      >
+        <span class="relative flex h-2 w-2">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+        </span>
+        {t['profile.badge']}
+      </a>
+
+      <!-- Detalle visual sutil de ubicación -->
+      <span class="inline-flex items-center gap-1.5 text-xs font-mono text-slate-400 dark:text-slate-400 px-1">
+        <span class="text-blue-500">📍</span> {t['profile.location']}
+      </span>
+    </div>
+  </div>
+
+  <!-- Título Principal & Extracto -->
+  <div class="space-y-3">
+    <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+      {t['profile.greeting']} <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-cyan-400">{t['profile.name']}</span>
+    </h1>
+
+    <p class="text-lg md:text-xl text-slate-700 dark:text-slate-300 leading-relaxed max-w-3xl">
+      <span class="font-bold text-blue-600 dark:text-blue-400 underline decoration-blue-500/40 underline-offset-4">
+        {t['profile.experience_highlight']}
+      </span> 
+      <strong class="font-bold text-slate-900 dark:text-white">
+        {t['profile.role_highlight']}.
+      </strong> 
+      {t['profile.about']}
+    </p>
+  </div>
+
+  <!-- Botones de Acción Estilo Píldora -->
+  <div class="pt-2 flex flex-wrap gap-3 items-center">
+    <a 
+      href="mailto:Reynaldogv9@gmail.com?subject=Contacto%20desde%20Portfolio" 
+      class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-900 dark:bg-slate-800 hover:bg-blue-600 dark:hover:bg-blue-600 text-white border border-slate-700 hover:border-blue-500 transition-all font-medium text-sm shadow-sm hover:scale-105"
+    >
+      <span>✉️</span> {t['btn.email']}
+    </a>
+
+    <a 
+      href="https://linkedin.com/in/reynaldo-guzmán" 
+      target="_blank" 
+      rel="noopener noreferrer" 
+      class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-900 dark:bg-slate-800 hover:bg-slate-800 dark:hover:bg-slate-700 text-slate-200 border border-slate-700 hover:border-blue-500 transition-all font-medium text-sm hover:scale-105"
+    >
+      <span>🔗</span> {t['btn.linkedin']}
+    </a>
+  </div>
+</header>

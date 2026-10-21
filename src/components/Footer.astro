@@ -1,0 +1,38 @@
+---
+/**
+ * Componente: Footer.astro
+ * Pie de página exclusivo para derechos reservados y año actual dinámico.
+ */
+
+import { ui } from '../i18n/ui';
+
+interface Props {
+  lang: 'es' | 'en';
+}
+
+const { lang } = Astro.props;
+const t = ui[lang];
+const currentYear = new Date().getFullYear(); // 2026
+---
+
+<footer class="py-8 border-t border-slate-200 dark:border-slate-800/80 text-xs font-mono text-slate-500 dark:text-slate-400">
+  <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+    
+    <!-- Derechos Reservados -->
+    <div class="flex items-center gap-1.5 flex-wrap justify-center sm:justify-start">
+      <span>©</span>
+      <span>{currentYear}</span>
+      <span>{t['footer.rights']}</span>
+    </div>
+
+    <!-- Navegación rápida -->
+    <a 
+      href={lang === 'es' ? "#perfil" : "#perfil-en"} 
+      class="hover:text-blue-500 dark:hover:text-blue-400 transition-colors flex items-center gap-1"
+    >
+      <span>↑</span>
+      <span>{lang === 'es' ? 'Volver arriba' : 'Back to top'}</span>
+    </a>
+
+  </div>
+</footer>
